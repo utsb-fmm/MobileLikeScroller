@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scroller Test</title>
+
+    
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="js/mobilelikescroller.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/mobilelikescroller.css">
+    <style>
+        .container-test {
+            width: 100%;
+            height: 300px;
+            display: flex;
+        }
+        .container-test>* {
+            width: 50%;
+            height: 100%;
+        }
+        .container-test code {
+            background-color: lightgrey;
+            display: block;
+            width:500px;
+            font-size:larger;
+        
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Demonstration of MobileLikeScroller</h1>
+
+    <h3>x-scroll</h3>
+    
+    <div class="container-test">
+        <pre>
+            <code>
+    &lt;div class="x-scroll"&gt;
+        &lt;!-- Content -- &gt;
+    &lt;/div&gt;
+            </code>
+        </pre>
+        <div class="test x-scroll">
+            <div class="content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Fronalpstock_big.jpg/2560px-Fronalpstock_big.jpg">
+            </div>
+        </div>
+
+    </div>
+
+    <h3>x-scroll with scrollbar</h3>
+    
+    <div class="container-test">
+        <pre>
+            <code>
+    &lt;div class="x-scroll with-scrollbar"&gt;
+        &lt;!-- Content -- &gt;
+    &lt;/div&gt;
+            </code>
+        </pre>
+        <div class="test x-scroll with-scrollbar">
+            <div class="content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Fronalpstock_big.jpg/2560px-Fronalpstock_big.jpg">
+            </div>
+        </div>
+    </div>
+
+    <h3>y-scroll </h3>
+    
+    <div class="container-test">
+        <pre>
+            <code>
+    &lt;div class="y-scroll"&gt;
+        &lt;!-- Content -- &gt;
+    &lt;/div&gt;
+            </code>
+        </pre>
+        <div class="test y-scroll">
+            <div class="content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Fronalpstock_big.jpg/2560px-Fronalpstock_big.jpg">
+            </div>
+        </div>
+
+    </div>
+
+    <h3>xy-scroll</h3>
+    
+    <div class="container-test">
+        <pre>
+            <code>
+    &lt;div class="xy-scroll"&gt;
+        &lt;!-- Content -- &gt;
+    &lt;/div&gt;
+            </code>
+        </pre>
+        <div class="test xy-scroll with-scrollbar">
+            <div class="content">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Fronalpstock_big.jpg/2560px-Fronalpstock_big.jpg">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

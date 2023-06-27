@@ -1,4 +1,4 @@
-class Scroller {
+class MobileLikeScroller {
     constructor(elem,direction='xy') {
         this.previousTouchX=[0,0,0];
         this.previousTouchY=[0,0,0];
@@ -31,14 +31,14 @@ class Scroller {
             }
             this.childEventObject=null;
 
-            this.blockChildrenTimeout = setTimeout(() => {
+            this.blockChildrenTimeout = setTimeout(() => { // Prevent children from being clicked after 300ms when we are sure that the user is grabbing the parent to scroll
                 $(this.target).find('*').each((i,elem) => {
                     let listener = (e) => this.childclick(e);
                     elem.addEventListener('click', listener, true)
                     this.childrenEventListeners.push([elem,listener]);
                 });
                 this.blockChildrenTimeout=null;
-            },500);
+            },300);
         }
     }
 
@@ -74,7 +74,6 @@ class Scroller {
             this.blockChildrenTimeout=null;
         }
     }
-
 
     childclick(e) {
         e.stopPropagation();
@@ -117,7 +116,7 @@ class Scroller {
 }
 
 $(document).ready(function () {
-    $('.x-scroll').each(function () { new Scroller(this,'x'); });
-    $('.y-scroll').each(function () { new Scroller(this,'y'); });
-    $('.xy-scroll').each(function () { new Scroller(this,'xy'); });
+    $('.x-scroll').each(function () { new MobileLikeScroller(this,'x'); });
+    $('.y-scroll').each(function () { new MobileLikeScroller(this,'y'); });
+    $('.xy-scroll').each(function () { new MobileLikeScroller(this,'xy'); });
 });

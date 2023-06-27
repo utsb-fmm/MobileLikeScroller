@@ -1,0 +1,21 @@
+.x-scroll,.xy-scroll {
+	overflow-x: auto;
+}
+.y-scroll,.xy-scroll {
+	overflow-x: auto;
+}
+.x-scroll {
+	overflow-y:hidden;
+}
+.y-scroll {
+	overflow-x:hidden;
+}
+.x-scroll,.y-scroll,.xy-scroll {
+	cursor: grab;
+}
+.x-scroll:not(.with-scrollbar),.y-scroll:not(.with-scrollbar),.xy-scroll:not(.with-scrollbar) {
+	scrollbar-width: 0; 
+}
+.x-scroll:not(.with-scrollbar)::-webkit-scrollbar,.y-scroll:not(.with-scrollbar)::-webkit-scrollbar,.xy-scroll:not(.with-scrollbar)::-webkit-scrollbar { 
+	display: none; /* For Chrome, Safari and Opera */
+}

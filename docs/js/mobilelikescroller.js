@@ -10,6 +10,7 @@ class MobileLikeScroller {
         this.childrenEventListeners = [];
         this.childEventObject=null;
         this.blockChildrenTimeout = null;
+        this.$BlockedInputs=[];
 
         $(elem).on('mousedown', (e) => this.touchstart(e));
 
@@ -30,15 +31,7 @@ class MobileLikeScroller {
                 this.inertialTimerInterval=null;
             }
             this.childEventObject=null;
-
-            this.blockChildrenTimeout = setTimeout(() => { // Prevent children from being clicked after 300ms when we are sure that the user is grabbing the parent to scroll
-                $(this.target).find('*').each((i,elem) => {
-                    let listener = (e) => this.childclick(e);
-                    elem.addEventListener('click', listener, true)
-                    this.childrenEventListeners.push([elem,listener]);
-                });
-                this.blockChildrenTimeout=null;
-            },300);
+            this.blockChildrenTimeout = setTimeout(() => { this.preventChildClicks(); },300); // Prevent children from being clicked after 300ms when we are sure that the user is grabbing the parent to scroll
         }
     }
 
@@ -48,6 +41,11 @@ class MobileLikeScroller {
         this.previousTouchTime = [this.previousTouchTime[1], this.previousTouchTime[2], Date.now()];
         if(this.direction!='y') this.target.scrollLeft -= this.previousTouchX[2] - this.previousTouchX[1];
         if(this.direction!='x') this.target.scrollTop -= this.previousTouchY[2] - this.previousTouchY[1];
+
+        if(this.blockChildrenTimeout && (this.previousTouchX[2] - this.previousTouchX[1])**2+(this.previousTouchY[2] - this.previousTouchY[1])**2>25) { 
+            // If fast mouse movement, this is not a click on children, do not wait 300ms
+            this.preventChildClicks();
+        }
         $(this.target).trigger('scroll');
         
     }
@@ -63,11 +61,14 @@ class MobileLikeScroller {
     click(e) {
         $(document).off('click.scroller');
         if(this.blockChildrenTimeout===null) {
-            console.log('remove all this.childrenEventListeners');
             this.childrenEventListeners.forEach((t) => {
                 t[0].removeEventListener('click', t[1], true);
             });
             this.childrenEventListeners=[];
+            setTimeout(() => { // The event for the change is done after the click event, so we need to wait for the click event to be done before re-enabling the inputs
+                this.$BlockedInputs.prop('disabled',false);
+                this.$BlockedInputs=[];
+            },0);
         }
         else {
             clearTimeout(this.blockChildrenTimeout);
@@ -75,6 +76,16 @@ class MobileLikeScroller {
         }
     }
 
+    preventChildClicks() {
+        $(this.target).find('*').each((i,elem) => {
+            let listener = (e) => this.childclick(e);
+            elem.addEventListener('click', listener, true)
+            this.childrenEventListeners.push([elem,listener]);
+        });
+        this.$BlockedInputs=$(this.target).find('input:not(:disabled)').prop('disabled',true);
+        clearInterval(this.blockChildrenTimeout);
+        this.blockChildrenTimeout=null;
+    }
     childclick(e) {
         e.stopPropagation();
         this.click(e);
@@ -119,4 +130,30 @@ $(document).ready(function () {
     $('.x-scroll').each(function () { new MobileLikeScroller(this,'x'); });
     $('.y-scroll').each(function () { new MobileLikeScroller(this,'y'); });
     $('.xy-scroll').each(function () { new MobileLikeScroller(this,'xy'); });
+
+    $("head").append(`
+        <style>
+            .x-scroll,.xy-scroll {
+                overflow-x: auto;
+            }
+            .y-scroll,.xy-scroll {
+                overflow-y: auto;
+            }
+            .x-scroll {
+                overflow-y:hidden;
+            }
+            .y-scroll {
+                overflow-x:hidden;
+            }
+            .x-scroll,.y-scroll,.xy-scroll {
+                cursor: grab;
+            }
+            .x-scroll:not(.with-scrollbar),.y-scroll:not(.with-scrollbar),.xy-scroll:not(.with-scrollbar) {
+                scrollbar-width: 0; 
+            }
+            .x-scroll:not(.with-scrollbar)::-webkit-scrollbar,.y-scroll:not(.with-scrollbar)::-webkit-scrollbar,.xy-scroll:not(.with-scrollbar)::-webkit-scrollbar { 
+                display: none; /* For Chrome, Safari and Opera */
+            }
+        </style>
+    `);
 });
